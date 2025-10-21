@@ -19,21 +19,22 @@ public class Disciplina implements Comparable<Disciplina> {
         return codigo + " - " + nome;
     }
 
+    // Evita duplicatas no Set
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Disciplina)) return false;
         Disciplina that = (Disciplina) o;
-        return codigo.equalsIgnoreCase(that.codigo);
+        return Objects.equals(codigo, that.codigo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(codigo.toUpperCase());
+        return Objects.hash(codigo);
     }
 
     @Override
-    public int compareTo(Disciplina o) {
-        return this.nome.compareToIgnoreCase(o.nome);
+    public int compareTo(Disciplina d) {
+        return this.codigo.compareTo(d.codigo);
     }
 }

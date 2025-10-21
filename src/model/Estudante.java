@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Objects;
-
 public class Estudante {
     private int id;
     private String nome;
@@ -19,19 +17,6 @@ public class Estudante {
 
     @Override
     public String toString() {
-        return id + " - " + nome + " (Treinador: " + pokemon + ")";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Estudante)) return false;
-        Estudante that = (Estudante) o;
-        return id == that.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+        return id + " - " + nome + " (Treinador de " + pokemon.getNome() + ")";
     }
 }

@@ -13,33 +13,36 @@ public class HistoricoNotas {
     }
 
     public List<Matricula> obterMatriculas(int idEstudante) {
-        return notas.getOrDefault(idEstudante, Collections.emptyList());
+        return notas.getOrDefault(idEstudante, new ArrayList<>());
     }
 
     public Optional<Double> obterNota(int idEstudante, String codigoDisciplina) {
-        return notas.getOrDefault(idEstudante, Collections.emptyList())
+        return notas.getOrDefault(idEstudante, new ArrayList<>())
                 .stream()
-                .filter(m -> m.getCodigoDisciplina().equalsIgnoreCase(codigoDisciplina))
+                .filter(m -> m.getCodigoDisciplina().equals(codigoDisciplina))
                 .map(Matricula::getNota)
                 .findFirst();
     }
 
     public void removerMatricula(int idEstudante, String codigoDisciplina) {
         notas.getOrDefault(idEstudante, new ArrayList<>())
-                .removeIf(m -> m.getCodigoDisciplina().equalsIgnoreCase(codigoDisciplina));
+                .removeIf(m -> m.getCodigoDisciplina().equals(codigoDisciplina));
     }
 
     public double mediaDoEstudante(int idEstudante) {
-        return obterMatriculas(idEstudante).stream()
-                .mapToDouble(Matricula::getNota).average().orElse(0.0);
+        List<Matricula> mats = notas.get(idEstudante);
+        if (mats == null || mats.isEmpty()) return 0.0;
+        return mats.stream().mapToDouble(Matricula::getNota).average().orElse(0.0);
     }
 
     public double mediaDaDisciplina(String codigoDisciplina) {
-        return notas.values().stream()
+        List<Double> notasDisciplina = notas.values().stream()
                 .flatMap(List::stream)
-                .filter(m -> m.getCodigoDisciplina().equalsIgnoreCase(codigoDisciplina))
-                .mapToDouble(Matricula::getNota)
-                .average().orElse(0.0);
+                .filter(m -> m.getCodigoDisciplina().equals(codigoDisciplina))
+                .map(Matricula::getNota)
+                .collect(Collectors.toList());
+        if (notasDisciplina.isEmpty()) return 0.0;
+        return notasDisciplina.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
     }
 
     public List<Map.Entry<Integer, Double>> topNEstudantesPorMedia(int N) {
